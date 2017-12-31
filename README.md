@@ -1,5 +1,3 @@
-Contains a collection of audio processing techniques used as part of one of my Uni Projects, such as circular buffers, FIR filter and more to come.
-
 How to use? Once you've included the files "CircularBuffer.h" and "VecTemplate.h" in your project. Create a new instance of the CircularBuffer class with the following.
 
 `CircularBuffer myNewBuffer;`
