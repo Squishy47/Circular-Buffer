@@ -13,6 +13,8 @@
 
 class CircularBuffer{
     Vec_Float buffer;
+    float interpValues[2];
+    int interpDiff;
     int bufferLength;
     int tail = 0;
     int head = 4;
@@ -26,13 +28,21 @@ public:
     }
 
     // num of elements to read behind current sample (n-j) input being j
-    float read(int numElementsToRead){
-        tail = head - numElementsToRead;    // tail = current index in buffer - number of elements to read.
-        if (tail > bufferLength - 1)        // if tail == bufferLength minus buffer length = 0;
-            tail -= bufferLength;
-        else if (tail < 0)
-            tail += bufferLength;
-        return buffer[tail];
+    float read(float numElementsToRead){
+        interpolation(numElementsToRead);
+        
+        for(int i = 0; i < 2; i++){
+            tail = head - interpValues[i];    // tail = current index in buffer - number of elements to read.
+            
+            if (tail > bufferLength - 1)
+                tail -= bufferLength;
+            else if (tail < 0)
+                tail += bufferLength;
+            
+            interpValues[i] = buffer[tail];
+        }
+        
+        return interpValues[1] * interpDiff + (1.0 - interpDiff) * interpValues[0];
     }
     
     // writes the new samples in the next index of the array,
@@ -45,6 +55,21 @@ public:
                 buffer[head] = inValue;
             head++;
         }
+    }
+    
+    void interpolation(float inValue){
+        int temp = round(inValue);
+
+        if(temp > inValue){
+            interpValues[1] = temp;                 // High value
+            interpValues[0] = interpValues[1] - 1;  // Low Value
+        }
+        else{
+            interpValues[0] = temp;                 // Low Value
+            interpValues[1] = interpValues[0] + 1;  // High value
+        }
+
+        interpDiff = inValue - interpValues[0];
     }
 };
 
