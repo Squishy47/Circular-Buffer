@@ -1,9 +1,5 @@
-//
 //  CircularBuffer.h
-//  squishysPlugin1 - Shared Code
-//
 //  Created by Squishy on 27/12/2017.
-//
 
 #ifndef CircularBuffer_h
 #define CircularBuffer_h
