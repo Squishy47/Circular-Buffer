@@ -3,6 +3,7 @@
 //
 //  Created by Squishy on 14/02/2018.
 //
+//  If you use this, please credit me :)
 
 #ifndef CircularBuffer_hpp
 #define CircularBuffer_hpp

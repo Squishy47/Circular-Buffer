@@ -3,6 +3,7 @@
 //
 //  Created by Squishy on 14/02/2018.
 //
+//  If you use this, please credit me :)
 
 #include "CircularBuffer.hpp"
 
@@ -69,7 +70,13 @@ float CircularBuffer::interpCalcAmount(float inValue, Selector inSelector){
 
 float CircularBuffer::getSample(float inValue){
     tail = head - inValue;
-    return buffer[tail % bufferLength];
+	
+	if (tail > bufferLength - 1)
+		tail -= bufferLength;
+	else if (tail < 0)
+		tail += bufferLength;
+	
+	return buffer[tail];
 }
 
 void CircularBuffer::setBufferLength(float inValue){
