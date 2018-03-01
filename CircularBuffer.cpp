@@ -9,6 +9,8 @@
 
 CircularBuffer::CircularBuffer(float inValue){
 	setBufferLength(inValue);
+	head = 0;
+	tail = 0;
 }
 
 float CircularBuffer::read(float index, InterType inValue){
@@ -40,8 +42,8 @@ float CircularBuffer::read(float index, InterType inValue){
 }
 
 void CircularBuffer::write(float inValue){
-    head++;
-    buffer[head % bufferLength] = inValue;
+    head = (head + 1) % bufferLength;
+    buffer[head] = inValue;
 }
 
 float CircularBuffer::interpCalcAmount(float inValue, Selector inSelector){
