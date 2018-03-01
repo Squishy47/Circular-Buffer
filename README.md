@@ -1,17 +1,39 @@
-How to use? Once you've included the files "CircularBuffer.h" and "VecTemplate.h" in your project. Create a new instance of the CircularBuffer class with the following.
+How to use? Once you've included the files "CircularBuffer.h" in your project, create a new instance of the CircularBuffer class with the followed by the length of the buffer you want in samples.
 
-`CircularBuffer myNewBuffer;`
+`CircularBuffer myBuffer{44100};`
 
-Now initialize the buffer and pass in the size of buffer you want as a variable of type int.
-
-`myNewBuffer.init(900);`
 
 To write elements to the buffer you need to pass in the data you want to write, as a float.
 
-`myNewBuffer.write(10.5);`
+`myBuffer.write(audioDataValue);`
 
-To read from the buffer you need to call the read function along with a variable. This variable relates to the index of the data that you want to read from, relative to the write head. e.g. If you want to read an element that was written 4 samples ago, you would do the following. The second argument allows you to set the interpolation type between "Linear" and "Cubic".
 
-`float fourSamplesAgo = myNewBuffer.read(4, "Cubic");`
+To read from the buffer use `read(index, interpType)`. Index is the number of samples back you want to read; 0 being the last written sample and bufferLength - 1 being the furthest back in the buffer you can go. 
 
-To read the last written sample pass 0.0 as an argument to the read function.
+`float fourSamplesAgo = myBuffer.read(3, linear);`
+`float lastWrittenSample = myBuffer.read(0, cubic);`
+
+
+To resize the buffer after initialisation:
+
+`myBuffer.setBufferLength(4);`
+
+
+To get the buffer length:
+`int bufferLength = myBuffer.getBufferLength(); // bufferLength = 4;` 
+
+
+Note. The buffer is sensitive to when you read and write samples. The read head indexes by one every time you call the write function. e.g.
+
+```
+CircularBuffer myBuffer{4};
+float audioData[4] = {4, 3, 2, 1};
+
+myBuffer.write(audioData[0]);
+myBuffer.write(audioData[1]);
+myBuffer.write(audioData[2]);
+float output = myBuffer.read(3, linear); // output = 0 because the 4th element in the buffer hasn't been written to yet
+
+myBuffer.write(audioData[3]);
+float output = myBuffer.read(3, linear); // output = 4 the last element in the buffer has been filled
+```
