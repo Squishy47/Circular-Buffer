@@ -3,37 +3,17 @@ How to use? Once you've included the files "CircularBuffer.h" in your project, c
 `CircularBuffer myBuffer{44100};`
 
 
-To write elements to the buffer you need to pass in the data you want to write, as a float.
+To write elements to the buffer you need to pass in the data you want to write, as a float. the buffer will auto index everytime you write too it.
 
 `myBuffer.write(audioDataValue);`
 
+Reading samples back.
+The read functions take 1 varialbe, a float equivalent to the number of samples back in time you want to go.
+e.g 
+`float sample = myBuffer.readCubic(4)`
+sample will be 4 samples behind the last written sample.
 
-To read from the buffer use `read(index, interpType)`. Index is the number of samples back you want to read; 0 being the last written sample and bufferLength - 1 being the furthest back in the buffer you can go. 
-
-`float fourSamplesAgo = myBuffer.read(3, linear);`
-`float lastWrittenSample = myBuffer.read(0, cubic);`
-
-
-To resize the buffer after initialisation:
-
-`myBuffer.setBufferLength(4);`
-
-
-To get the buffer length:
-`int bufferLength = myBuffer.getBufferLength(); // bufferLength = 4;` 
-
-
-Note. The buffer is sensitive to when you read and write samples. The read head indexes by one every time you call the write function. e.g.
-
-```
-CircularBuffer myBuffer{4};
-float audioData[4] = {4, 3, 2, 1};
-
-myBuffer.write(audioData[0]);
-myBuffer.write(audioData[1]);
-myBuffer.write(audioData[2]);
-float output = myBuffer.read(3, linear); // output = 0 because the 4th element in the buffer hasn't been written to yet
-
-myBuffer.write(audioData[3]);
-float output = myBuffer.read(3, linear); // output = 4 the last element in the buffer has been filled
-```
+there are 3 read functions avaible. the last 2 come at a performance cost and will be removed at some point.
+`readCubic(value);
+readLinear(value);
+read(value, cubic); // read(value, linear);`
