@@ -23,11 +23,13 @@ public:
     CircularBuffer(float inValue);
     
     float read(float numElementsToRead, InterType inValue);
-    
+	
+	float readCubic(float numElementsToRead);
+
+	float readLinear(float numElementsToRead);
+
     void write(float inValue);
     
-    float interpCalcAmount(float inValue, Selector inSelector);
-
     float cubicInterpolation(double y0, double y1, double y2, double y3, double mu);
     
     float getSample(float inValue);
