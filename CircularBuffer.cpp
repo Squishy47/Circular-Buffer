@@ -9,8 +9,6 @@
 
 CircularBuffer::CircularBuffer(float inValue){
 	setBufferLength(inValue);
-	head = 0;
-	tail = 0;
 }
 
 float CircularBuffer::readCubic(float index){
@@ -26,43 +24,15 @@ float CircularBuffer::readCubic(float index){
 }
 
 float CircularBuffer::readLinear(float index){
-	float upper, lower, interpAmount;
-
-	upper = floor(index);
-	lower = floor(index);
-	interpAmount = index - lower;
+	float upper = floor(index) + 1;
+	float lower = floor(index);
+	float interpAmount = index - lower;
 	
 	return (getSample(upper) * interpAmount + (1.0 - interpAmount) * getSample(lower));
 }
 
-float CircularBuffer::read(float index, InterType inValue){
-	float y0, y1, y2, y3, mu, upper, lower, interpAmount;
-	
-	switch(inValue){
-		case cubic:{
-			y0 = floor(index - 1);
-			y1 = floor(index);
-			y2 = floor(index);
-			y3 = floor(index + 1);
-			mu = index - y1;
-			return cubicInterpolation(getSample(y0), getSample(y1), getSample(y2), getSample(y3), mu);
-		break;
-		}
-		case linear:{
-				upper = floor(index);
-				lower = floor(index);
-				interpAmount = index - lower;
-				return (getSample(upper) * interpAmount + (1.0 - interpAmount) * getSample(lower));
-			break;
-		}
-		default:
-			return 0.0;
-		break;
-	}
-}
-
 void CircularBuffer::write(float inValue){
-    head = (head + 1) % bufferLength;
+    head = (head += 4) % bufferLength;
     buffer[head] = inValue;
 }
 
